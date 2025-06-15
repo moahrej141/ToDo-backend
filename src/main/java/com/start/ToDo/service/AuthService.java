@@ -33,7 +33,7 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!encoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new RuntimeException("Incorrect password or email");
         }
 
         return jwtUtil.generateToken(email);

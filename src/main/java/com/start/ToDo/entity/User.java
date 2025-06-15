@@ -4,7 +4,6 @@ package com.start.ToDo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 
 @Entity
@@ -26,6 +25,4 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Task> tasks;
 }

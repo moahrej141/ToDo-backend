@@ -2,22 +2,25 @@
 package com.start.ToDo.security;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class JwtUtil {
-    private final String SECRET_KEY = "secretkey12sssadsshet5363hbqs333f345"; 
-    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 10;
 
+    private static final String SECRET_KEY = "zLx7dHkZ4R9wW1pQ2uF7aSgV8xC3nMmTpJsYqKzE6vHbRtUgFxQeZiLw";
+    private static final long EXPIRATION_TIME = 86400000; 
     public String generateToken(String email) {
+        Key key = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
         return Jwts.builder()
-         .setSubject(email)
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -35,8 +38,9 @@ public class JwtUtil {
     }
 
     private Claims getClaims(String token) {
+        Key key = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
         return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
